@@ -22,8 +22,8 @@
 | F06 | 担当者割り当て | タスク管理 | ★★☆ | [機能要件](functional-requirements.md#f06) |
 | F07 | 期限設定 | タスク管理 | ★★☆ | [機能要件](functional-requirements.md#f07) |
 | F08 | ユーザー認証 | 認証 | ★★★ | [機能要件](functional-requirements.md#f08) |
-| F09 | <!-- 機能名 --> | <!-- カテゴリ --> | <!-- 優先度 --> | |
+| F09 | タスク並び替え | タスク管理 | ★★☆ | [機能要件](functional-requirements.md#f09) |
 
 ---
 
-最終更新：2026-11-05
+最終更新：2026-11-11
