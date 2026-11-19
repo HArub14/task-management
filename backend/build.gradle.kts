@@ -7,6 +7,9 @@ plugins {
 group = "com.taskmanagement"
 version = "0.0.1-SNAPSHOT"
 
+// OneDriveの同期によるファイルロックを回避するためビルドディレクトリをローカルに設定
+layout.buildDirectory.set(file("${System.getProperty("user.home")}/AppData/Local/Temp/taskmanagement-build"))
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
