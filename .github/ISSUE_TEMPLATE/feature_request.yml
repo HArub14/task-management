@@ -1,0 +1,48 @@
+name: 機能追加
+description: 新機能の追加・改善を提案する
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        機能追加・改善の提案テンプレートです。できるだけ具体的に記入してください。
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 背景・目的
+      description: なぜこの機能が必要か、どんな課題を解決するかを説明してください
+      placeholder: 例：タスクを優先度でフィルタリングできないため、重要なタスクを見落とすことがある
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 実装する機能の概要
+      description: どのような機能を追加・変更するかを説明してください
+      placeholder: 例：タスク一覧画面に優先度（高・中・低）でフィルタリングできるドロップダウンを追加する
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 受け入れ条件
+      description: 何をもって完了とするかをチェックリスト形式で記述してください
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 備考・参考
+      description: 参考資料、スクリーンショット、関連Issueなどがあれば記載してください
+      placeholder: 任意
+    validations:
+      required: false

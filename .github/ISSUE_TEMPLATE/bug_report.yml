@@ -1,0 +1,69 @@
+name: バグ報告
+description: 不具合・予期しない動作を報告する
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        バグ報告テンプレートです。再現手順をできるだけ詳しく記入してください。
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 発生している問題
+      description: どんな問題が起きているかを簡潔に説明してください
+      placeholder: 例：タスクの編集画面で保存ボタンを押しても変更が保存されない
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: バグを再現するための手順を番号付きで記述してください
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
+      description: 本来どのように動作すべきかを説明してください
+      placeholder: 例：保存ボタンを押したらタスクの内容が更新されて一覧画面に戻る
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の動作
+      description: 実際にどのような動作になっているかを説明してください
+      placeholder: 例：保存ボタンを押しても画面が変わらず、一覧画面を開くと変更が反映されていない
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境情報
+      description: 発生した環境を記入してください
+      value: |
+        - OS:
+        - ブラウザ:
+        - バージョン:
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 備考・スクリーンショット
+      description: エラーログ、スクリーンショット、関連Issueなどがあれば記載してください
+      placeholder: 任意
+    validations:
+      required: false
