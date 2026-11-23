@@ -2,7 +2,6 @@ package com.taskmanagement.dto;
 
 import com.taskmanagement.entity.Task;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,7 +11,7 @@ public record TaskResponse(
         String description,
         String status,
         String priority,
-        LocalDate dueDate,
+        String dueDate,
         UUID assigneeId,
         String assigneeName,
         UUID createdById,
@@ -26,7 +25,7 @@ public record TaskResponse(
                 task.getDescription(),
                 task.getStatus(),
                 task.getPriority(),
-                task.getDueDate(),
+                task.getDueDate() != null ? task.getDueDate().toString() : null,
                 task.getAssignee() != null ? task.getAssignee().getId() : null,
                 task.getAssignee() != null ? task.getAssignee().getName() : null,
                 task.getCreatedBy().getId(),
