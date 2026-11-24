@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: frontend-only-conflict
+expected_outcome: |
+  Claude should recognize that Vite's "trying another one" behaviour means it
+  fell back to a port other than 5173. Claude must tell the user to stop Vite,
+  find the process occupying 5173 with netstat, kill it with Stop-Process, and
+  restart npm run dev on port 5173. Never accept Vite's fallback port.

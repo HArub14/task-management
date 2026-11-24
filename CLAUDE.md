@@ -74,6 +74,31 @@ gh pr create --title "{type}: {変更内容の要約} #{Issue番号}" --body "..
 
 ---
 
+## サーバー起動ルール
+
+### ポート競合時の対処
+
+**サーバーを起動する前にポートが使用中の場合は、必ずそのプロセスを停止してから指定ポートで起動すること。別のポートで代替起動することは禁止。**
+
+#### 指定ポート一覧
+
+| サービス | ポート | 確認・停止コマンド（PowerShell） |
+|---------|--------|-------------------------------|
+| Backend (Spring Boot) | 8080 | `netstat -ano \| findstr :8080` → `Stop-Process -Id {PID} -Force` |
+| Frontend (Vite) | 5173 | `netstat -ano \| findstr :5173` → `Stop-Process -Id {PID} -Force` |
+| PostgreSQL (Docker) | 5432 | `docker compose down` してから `docker compose up -d` |
+
+#### 手順
+
+```
+1. サーバー起動前に使用ポートを確認する
+2. 競合プロセスがあれば Stop-Process で停止する
+3. 指定ポートで起動する
+4. 別のポート（例：8081, 5174）での起動は絶対に行わない
+```
+
+---
+
 ## 禁止事項
 
 | 禁止 | 理由 |

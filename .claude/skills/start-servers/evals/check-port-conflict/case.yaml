@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: check-port-conflict
+expected_outcome: |
+  Claude should identify port 8080 as the designated backend port, provide the
+  netstat command to find the conflicting PID, and give the Stop-Process command
+  to kill it. Claude must NOT suggest using an alternative port like 8081.

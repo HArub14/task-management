@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: start-all-servers
+expected_outcome: |
+  Claude should: (1) check all three ports (8080, 5173, 5432) for conflicts first,
+  (2) start services in the correct order: DB (docker compose up -d) first,
+  then Backend (gradlew bootRun), then Frontend (npm run dev).
+  Commands should use the correct working directories.
