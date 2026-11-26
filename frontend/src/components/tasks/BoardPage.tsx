@@ -4,9 +4,11 @@ import { BOARD_COLUMNS } from '../../types/task'
 import { useTasks } from '../../hooks/useTasks'
 import { BoardColumn } from './BoardColumn'
 import { PriorityFilter } from './PriorityFilter'
+import { CreateTaskModal } from './CreateTaskModal'
 
 export function BoardPage() {
   const [priority, setPriority] = useState<TaskPriority | undefined>()
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const { data: tasks = [], isLoading, isError } = useTasks(priority)
 
   const columns = useMemo(
@@ -22,8 +24,18 @@ export function BoardPage() {
     <main className="flex h-[calc(100vh-56px)] flex-col overflow-hidden">
       <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
         <h1 className="text-lg font-bold text-gray-800">タスク一覧</h1>
-        <PriorityFilter value={priority} onChange={setPriority} />
+        <div className="flex items-center gap-3">
+          <PriorityFilter value={priority} onChange={setPriority} />
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            + タスク追加
+          </button>
+        </div>
       </div>
+
+      {showCreateModal && <CreateTaskModal onClose={() => setShowCreateModal(false)} />}
 
       <div className="flex-1 overflow-auto px-6 py-4">
         {isLoading && (
