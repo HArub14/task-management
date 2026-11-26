@@ -1,5 +1,5 @@
 import { apiClient } from '../lib/axios'
-import type { CreateTaskRequest, TaskPriority, TaskResponse } from '../types/task'
+import type { CreateTaskRequest, TaskPriority, TaskResponse, UpdateTaskRequest } from '../types/task'
 
 export interface GetTasksParams {
   priority?: TaskPriority
@@ -15,5 +15,10 @@ export async function getTasks(params: GetTasksParams = {}): Promise<TaskRespons
 
 export async function createTask(request: CreateTaskRequest): Promise<TaskResponse> {
   const { data } = await apiClient.post<TaskResponse>('/tasks', request)
+  return data
+}
+
+export async function updateTask(id: string, request: UpdateTaskRequest): Promise<TaskResponse> {
+  const { data } = await apiClient.put<TaskResponse>(`/tasks/${id}`, request)
   return data
 }

@@ -1,6 +1,7 @@
 package com.taskmanagement.entity;
 
 import com.taskmanagement.dto.TaskRequest;
+import com.taskmanagement.dto.TaskUpdateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,4 +59,13 @@ public class Task {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public void update(TaskUpdateRequest request) {
+        if (request.title() != null) this.title = request.title();
+        if (request.description() != null) this.description = request.description();
+        if (request.status() != null) this.status = request.status();
+        if (request.priority() != null) this.priority = request.priority();
+        if (request.dueDate() != null) this.dueDate = request.dueDate();
+        this.updatedAt = LocalDateTime.now();
+    }
 }

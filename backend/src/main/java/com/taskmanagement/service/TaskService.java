@@ -2,6 +2,7 @@ package com.taskmanagement.service;
 
 import com.taskmanagement.dto.TaskRequest;
 import com.taskmanagement.dto.TaskResponse;
+import com.taskmanagement.dto.TaskUpdateRequest;
 import com.taskmanagement.entity.Task;
 import com.taskmanagement.entity.User;
 import com.taskmanagement.repository.TaskRepository;
@@ -44,6 +45,14 @@ public class TaskService {
         return taskRepository.findById(id)
                 .map(TaskResponse::from)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found: " + id));
+    }
+
+    @Transactional
+    public TaskResponse updateTask(UUID id, TaskUpdateRequest request) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found: " + id));
+        task.update(request);
+        return TaskResponse.from(task);
     }
 
     @Transactional
