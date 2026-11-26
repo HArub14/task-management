@@ -56,6 +56,14 @@ public class TaskService {
     }
 
     @Transactional
+    public void deleteTask(UUID id) {
+        if (!taskRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found: " + id);
+        }
+        taskRepository.deleteById(id);
+    }
+
+    @Transactional
     public TaskResponse createTask(TaskRequest request) {
         // 暫定: DB の最初のユーザーを作成者とする（認証実装後に差し替え）
         User createdBy = userRepository.findAll().stream()

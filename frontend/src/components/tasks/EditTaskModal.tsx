@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { TaskPriority, TaskResponse, TaskStatus } from '../../types/task'
 import { STATUS_LABELS, PRIORITY_LABELS } from '../../types/task'
 import { useUpdateTask } from '../../hooks/useUpdateTask'
+import { useDeleteTask } from '../../hooks/useDeleteTask'
 
 interface Props {
   task: TaskResponse
@@ -14,14 +15,16 @@ export function EditTaskModal({ task, onClose }: Props) {
   const [status, setStatus] = useState<TaskStatus>(task.status)
   const [priority, setPriority] = useState<TaskPriority | ''>(task.priority ?? '')
   const [dueDate, setDueDate] = useState(task.dueDate ?? '')
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
-  const { mutate, isPending, isError } = useUpdateTask()
+  const { mutate: updateMutate, isPending: isUpdating, isError } = useUpdateTask()
+  const { mutate: deleteMutate, isPending: isDeleting } = useDeleteTask()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!title.trim()) return
 
-    mutate(
+    updateMutate(
       {
         id: task.id,
         request: {
@@ -34,6 +37,10 @@ export function EditTaskModal({ task, onClose }: Props) {
       },
       { onSuccess: onClose },
     )
+  }
+
+  function handleDelete() {
+    deleteMutate(task.id, { onSuccess: onClose })
   }
 
   return (
@@ -110,22 +117,54 @@ export function EditTaskModal({ task, onClose }: Props) {
             <p className="text-sm text-red-600">更新に失敗しました。もう一度お試しください。</p>
           )}
 
-          <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
-              キャンセル
-            </button>
-            <button
-              type="submit"
-              disabled={isPending || !title.trim()}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-            >
-              {isPending ? '保存中...' : '保存'}
-            </button>
-          </div>
+          {confirmDelete ? (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+              <p className="mb-3 text-sm text-red-700">本当に削除しますか？この操作は取り消せません。</p>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setConfirmDelete(false)}
+                  className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  キャンセル
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                >
+                  {isDeleting ? '削除中...' : '削除する'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                className="text-sm font-medium text-red-500 hover:text-red-700"
+              >
+                削除
+              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  キャンセル
+                </button>
+                <button
+                  type="submit"
+                  disabled={isUpdating || !title.trim()}
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isUpdating ? '保存中...' : '保存'}
+                </button>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
