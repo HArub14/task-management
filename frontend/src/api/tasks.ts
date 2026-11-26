@@ -22,3 +22,7 @@ export async function updateTask(id: string, request: UpdateTaskRequest): Promis
   const { data } = await apiClient.put<TaskResponse>(`/tasks/${id}`, request)
   return data
 }
+
+export async function deleteTask(id: string): Promise<void> {
+  await apiClient.delete(`/tasks/${id}`)
+}
