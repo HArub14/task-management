@@ -8,6 +8,14 @@ export interface CreateTaskRequest {
   dueDate?: string
 }
 
+export interface UpdateTaskRequest {
+  title?: string
+  description?: string
+  status?: TaskStatus
+  priority?: TaskPriority
+  dueDate?: string
+}
+
 export interface TaskResponse {
   id: string
   title: string

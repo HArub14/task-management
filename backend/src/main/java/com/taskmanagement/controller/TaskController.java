@@ -2,6 +2,7 @@ package com.taskmanagement.controller;
 
 import com.taskmanagement.dto.TaskRequest;
 import com.taskmanagement.dto.TaskResponse;
+import com.taskmanagement.dto.TaskUpdateRequest;
 import com.taskmanagement.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,10 @@ public class TaskController {
     public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest request) {
         TaskResponse response = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public TaskResponse updateTask(@PathVariable UUID id, @RequestBody TaskUpdateRequest request) {
+        return taskService.updateTask(id, request);
     }
 }
