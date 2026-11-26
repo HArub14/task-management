@@ -1,8 +1,8 @@
-import type { TaskResponse } from '../types/task'
+import type { TaskPriority, TaskResponse } from '../types/task'
 
 export type SortKey = 'priority' | 'dueDate' | 'createdAt'
 
-const PRIORITY_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 }
+const PRIORITY_ORDER: Record<TaskPriority, number> = { high: 0, medium: 1, low: 2 }
 
 export function sortTasks(tasks: TaskResponse[], key: SortKey): TaskResponse[] {
   return [...tasks].sort((a, b) => {

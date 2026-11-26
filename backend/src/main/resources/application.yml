@@ -5,16 +5,16 @@ spring:
       - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/taskmanagement
-    username: taskuser
-    password: taskpass
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/taskmanagement}
+    username: ${DB_USERNAME:taskuser}
+    password: ${DB_PASSWORD:taskpass}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: ${SHOW_SQL:false}
     properties:
       hibernate:
         format_sql: true

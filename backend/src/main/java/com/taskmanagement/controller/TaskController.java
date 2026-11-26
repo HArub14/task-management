@@ -4,6 +4,7 @@ import com.taskmanagement.dto.TaskRequest;
 import com.taskmanagement.dto.TaskResponse;
 import com.taskmanagement.dto.TaskUpdateRequest;
 import com.taskmanagement.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +33,13 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest request) {
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest request) {
         TaskResponse response = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public TaskResponse updateTask(@PathVariable UUID id, @RequestBody TaskUpdateRequest request) {
+    public TaskResponse updateTask(@PathVariable UUID id, @Valid @RequestBody TaskUpdateRequest request) {
         return taskService.updateTask(id, request);
     }
 
