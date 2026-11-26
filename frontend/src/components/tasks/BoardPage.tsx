@@ -5,19 +5,22 @@ import { useTasks } from '../../hooks/useTasks'
 import { BoardColumn } from './BoardColumn'
 import { PriorityFilter } from './PriorityFilter'
 import { CreateTaskModal } from './CreateTaskModal'
+import { sortTasks, SORT_OPTIONS } from '../../lib/sortTasks'
+import type { SortKey } from '../../lib/sortTasks'
 
 export function BoardPage() {
   const [priority, setPriority] = useState<TaskPriority | undefined>()
+  const [sortKey, setSortKey] = useState<SortKey>('priority')
   const [showCreateModal, setShowCreateModal] = useState(false)
   const { data: tasks = [], isLoading, isError } = useTasks(priority)
 
   const columns = useMemo(
     () => ({
-      todo: tasks.filter((t) => t.status === 'todo'),
-      in_progress: tasks.filter((t) => t.status === 'in_progress'),
-      done: tasks.filter((t) => t.status === 'done'),
+      todo: sortTasks(tasks.filter((t) => t.status === 'todo'), sortKey),
+      in_progress: sortTasks(tasks.filter((t) => t.status === 'in_progress'), sortKey),
+      done: sortTasks(tasks.filter((t) => t.status === 'done'), sortKey),
     }),
-    [tasks],
+    [tasks, sortKey],
   )
 
   return (
@@ -25,6 +28,17 @@ export function BoardPage() {
       <div className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 bg-white px-6 py-3">
         <h1 className="text-lg font-bold text-gray-800">タスク一覧</h1>
         <div className="flex items-center gap-3">
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as SortKey)}
+            className="rounded-lg border border-gray-300 px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          >
+            {SORT_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
           <PriorityFilter value={priority} onChange={setPriority} />
           <button
             onClick={() => setShowCreateModal(true)}
