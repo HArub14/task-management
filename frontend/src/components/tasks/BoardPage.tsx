@@ -1,10 +1,14 @@
 import { useMemo, useState } from 'react'
-import type { TaskPriority } from '../../types/task'
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import type { TaskPriority, TaskResponse, TaskStatus } from '../../types/task'
 import { BOARD_COLUMNS } from '../../types/task'
 import { useTasks } from '../../hooks/useTasks'
+import { useUpdateTask } from '../../hooks/useUpdateTask'
 import { BoardColumn } from './BoardColumn'
 import { PriorityFilter } from './PriorityFilter'
 import { CreateTaskModal } from './CreateTaskModal'
+import { TaskCard } from './TaskCard'
 import { sortTasks, SORT_OPTIONS } from '../../lib/sortTasks'
 import type { SortKey } from '../../lib/sortTasks'
 
@@ -12,7 +16,13 @@ export function BoardPage() {
   const [priority, setPriority] = useState<TaskPriority | undefined>()
   const [sortKey, setSortKey] = useState<SortKey>('priority')
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [draggingTask, setDraggingTask] = useState<TaskResponse | null>(null)
   const { data: tasks = [], isLoading, isError } = useTasks(priority)
+  const { mutate: updateTask } = useUpdateTask()
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  )
 
   const columns = useMemo(
     () => ({
@@ -22,6 +32,23 @@ export function BoardPage() {
     }),
     [tasks, sortKey],
   )
+
+  function handleDragStart(event: DragStartEvent) {
+    const task = event.active.data.current?.task as TaskResponse
+    setDraggingTask(task ?? null)
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setDraggingTask(null)
+    const { active, over } = event
+    if (!over) return
+
+    const task = active.data.current?.task as TaskResponse
+    const newStatus = over.id as TaskStatus
+    if (task.status === newStatus) return
+
+    updateTask({ id: task.id, request: { status: newStatus } })
+  }
 
   return (
     <main className="flex h-[calc(100vh-56px)] flex-col overflow-hidden">
@@ -65,16 +92,25 @@ export function BoardPage() {
         )}
 
         {!isLoading && !isError && (
-          <div className="flex gap-4">
-            {BOARD_COLUMNS.map((col) => (
-              <BoardColumn
-                key={col.status}
-                title={col.label}
-                status={col.status}
-                tasks={columns[col.status]}
-              />
-            ))}
-          </div>
+          <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <div className="flex gap-4">
+              {BOARD_COLUMNS.map((col) => (
+                <BoardColumn
+                  key={col.status}
+                  title={col.label}
+                  status={col.status}
+                  tasks={columns[col.status]}
+                />
+              ))}
+            </div>
+            <DragOverlay>
+              {draggingTask && (
+                <div className="rotate-2 opacity-90 shadow-2xl">
+                  <TaskCard task={draggingTask} />
+                </div>
+              )}
+            </DragOverlay>
+          </DndContext>
         )}
       </div>
     </main>

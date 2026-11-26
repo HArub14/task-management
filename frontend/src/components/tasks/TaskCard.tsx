@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
 import type { TaskResponse } from '../../types/task'
 import { Badge } from '../ui/Badge'
 import { EditTaskModal } from './EditTaskModal'
@@ -15,11 +17,22 @@ function formatDate(dateStr: string): string {
 export function TaskCard({ task }: TaskCardProps) {
   const [showEdit, setShowEdit] = useState(false)
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    data: { task },
+  })
+
+  const style = { transform: CSS.Translate.toString(transform) }
+
   return (
     <>
       <div
-        className="mb-2 cursor-pointer rounded-lg border border-gray-200 bg-white p-3 shadow-sm hover:border-primary hover:shadow-md transition-all"
-        onClick={() => setShowEdit(true)}
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        onClick={() => !isDragging && setShowEdit(true)}
+        className={`mb-2 cursor-grab rounded-lg border border-gray-200 bg-white p-3 shadow-sm transition-all hover:border-primary hover:shadow-md active:cursor-grabbing ${isDragging ? 'opacity-50 shadow-lg' : ''}`}
       >
         <p className="mb-2 line-clamp-2 text-sm font-semibold text-gray-800">{task.title}</p>
         <div className="flex flex-wrap items-center gap-1.5">
