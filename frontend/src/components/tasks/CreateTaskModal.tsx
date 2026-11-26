@@ -2,11 +2,11 @@ import { useState } from 'react'
 import type { CreateTaskRequest, TaskPriority } from '../../types/task'
 import { useCreateTask } from '../../hooks/useCreateTask'
 
-interface Props {
+interface CreateTaskModalProps {
   onClose: () => void
 }
 
-export function CreateTaskModal({ onClose }: Props) {
+export function CreateTaskModal({ onClose }: CreateTaskModalProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [priority, setPriority] = useState<TaskPriority | ''>('')
@@ -35,10 +35,11 @@ export function CreateTaskModal({ onClose }: Props) {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="create-title" className="mb-1 block text-sm font-medium text-gray-700">
               タイトル <span className="text-red-500">*</span>
             </label>
             <input
+              id="create-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -49,8 +50,9 @@ export function CreateTaskModal({ onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">説明</label>
+            <label htmlFor="create-description" className="mb-1 block text-sm font-medium text-gray-700">説明</label>
             <textarea
+              id="create-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="詳細を入力（任意）"
@@ -60,8 +62,9 @@ export function CreateTaskModal({ onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">優先度</label>
+            <label htmlFor="create-priority" className="mb-1 block text-sm font-medium text-gray-700">優先度</label>
             <select
+              id="create-priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority | '')}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -74,8 +77,9 @@ export function CreateTaskModal({ onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">期日</label>
+            <label htmlFor="create-due-date" className="mb-1 block text-sm font-medium text-gray-700">期日</label>
             <input
+              id="create-due-date"
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}

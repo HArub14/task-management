@@ -10,33 +10,33 @@
 
 | 技術 | バージョン | 用途 |
 |------|-----------|------|
-| React | 18.x | UIフレームワーク |
-| TypeScript | 5.x | 型安全な開発 |
-| Vite | 5.x | ビルドツール・開発サーバー |
-| React Router | 6.x | クライアントサイドルーティング |
-| TanStack Query | 5.x | サーバー状態管理・APIキャッシュ |
-| Axios | 1.x | HTTPクライアント |
-| Tailwind CSS | 3.x | スタイリング |
+| React | 18.3.1 | UIフレームワーク |
+| TypeScript | 5.6.3 | 型安全な開発 |
+| Vite | 5.4.11 | ビルドツール・開発サーバー |
+| React Router | 6.28.0 | クライアントサイドルーティング |
+| TanStack Query | 5.62.3 | サーバー状態管理・APIキャッシュ |
+| Axios | 1.7.9 | HTTPクライアント |
+| Tailwind CSS | 3.4.16 | スタイリング |
 
 ### バックエンド
 
 | 技術 | バージョン | 用途 |
 |------|-----------|------|
 | Java | 25 (LTS) | プログラミング言語 |
-| Spring Boot | 4.1.x | アプリケーションフレームワーク |
+| Spring Boot | 4.1.2 | アプリケーションフレームワーク |
 | Spring Web | — | REST API |
 | Spring Data JPA | — | ORM（Hibernate） |
 | Spring Security | — | 認証・認可 |
 | JWT（jjwt） | 0.12.x | トークン認証 |
 | Lombok | — | ボイラープレート削減 |
-| Gradle | 9.x | ビルドツール |
+| Gradle | 9.8.2 | ビルドツール |
 
 ### データベース
 
 | 技術 | バージョン | 用途 |
 |------|-----------|------|
-| PostgreSQL | 16.x | リレーショナルDB |
-| Flyway | 9.x | マイグレーション管理 |
+| PostgreSQL | 16 (alpine) | リレーショナルDB |
+| Flyway | (Spring Boot 4.1.2 管理) | マイグレーション管理 |
 
 ### インフラ・ホスティング
 
@@ -92,7 +92,7 @@
 | 項目 | 内容 |
 |------|------|
 | Java | 25 (LTS) |
-| Gradle | 9.x |
+| Gradle | 9.8.2 |
 | Node.js | 20.x (フロントエンド開発用) |
 | パッケージマネージャー | npm |
 | 推奨エディタ（バックエンド） | IntelliJ IDEA |
@@ -100,4 +100,4 @@
 
 ---
 
-最終更新：2026-11-16
+最終更新：2026-11-24

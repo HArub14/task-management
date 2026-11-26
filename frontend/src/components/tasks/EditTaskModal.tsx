@@ -4,12 +4,12 @@ import { STATUS_LABELS, PRIORITY_LABELS } from '../../types/task'
 import { useUpdateTask } from '../../hooks/useUpdateTask'
 import { useDeleteTask } from '../../hooks/useDeleteTask'
 
-interface Props {
+interface EditTaskModalProps {
   task: TaskResponse
   onClose: () => void
 }
 
-export function EditTaskModal({ task, onClose }: Props) {
+export function EditTaskModal({ task, onClose }: EditTaskModalProps) {
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description ?? '')
   const [status, setStatus] = useState<TaskStatus>(task.status)
@@ -18,7 +18,7 @@ export function EditTaskModal({ task, onClose }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   const { mutate: updateMutate, isPending: isUpdating, isError } = useUpdateTask()
-  const { mutate: deleteMutate, isPending: isDeleting } = useDeleteTask()
+  const { mutate: deleteMutate, isPending: isDeleting, isError: isDeleteError } = useDeleteTask()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -50,10 +50,11 @@ export function EditTaskModal({ task, onClose }: Props) {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="edit-title" className="mb-1 block text-sm font-medium text-gray-700">
               タイトル <span className="text-red-500">*</span>
             </label>
             <input
+              id="edit-title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -63,8 +64,9 @@ export function EditTaskModal({ task, onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">説明</label>
+            <label htmlFor="edit-description" className="mb-1 block text-sm font-medium text-gray-700">説明</label>
             <textarea
+              id="edit-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -73,8 +75,9 @@ export function EditTaskModal({ task, onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">ステータス</label>
+            <label htmlFor="edit-status" className="mb-1 block text-sm font-medium text-gray-700">ステータス</label>
             <select
+              id="edit-status"
               value={status}
               onChange={(e) => setStatus(e.target.value as TaskStatus)}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -88,8 +91,9 @@ export function EditTaskModal({ task, onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">優先度</label>
+            <label htmlFor="edit-priority" className="mb-1 block text-sm font-medium text-gray-700">優先度</label>
             <select
+              id="edit-priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority | '')}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -104,8 +108,9 @@ export function EditTaskModal({ task, onClose }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">期日</label>
+            <label htmlFor="edit-due-date" className="mb-1 block text-sm font-medium text-gray-700">期日</label>
             <input
+              id="edit-due-date"
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
@@ -120,6 +125,9 @@ export function EditTaskModal({ task, onClose }: Props) {
           {confirmDelete ? (
             <div className="rounded-lg border border-red-200 bg-red-50 p-3">
               <p className="mb-3 text-sm text-red-700">本当に削除しますか？この操作は取り消せません。</p>
+              {isDeleteError && (
+                <p className="mb-2 text-sm text-red-600">削除に失敗しました。もう一度お試しください。</p>
+              )}
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
