@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import type { TaskPriority, TaskResponse } from '../../types/task'
-import { PRIORITY_LABELS, STATUS_LABELS } from '../../types/task'
+import type { TaskPriority, TaskResponse, TaskStatus } from '../../types/task'
+import { PRIORITY_LABELS } from '../../types/task'
 import { useTasks } from '../../hooks/useTasks'
 import { PriorityFilter } from './PriorityFilter'
 import { CreateTaskModal } from './CreateTaskModal'
@@ -13,6 +13,14 @@ const PRIORITY_BADGE: Record<TaskPriority, string> = {
   medium: 'bg-yellow-100 text-yellow-700',
   low: 'bg-green-100 text-green-700',
 }
+
+const STATUS_HEADER: Record<TaskStatus, { label: string; style: string }> = {
+  todo: { label: '未着手', style: 'bg-gray-100 text-gray-600' },
+  in_progress: { label: '進行中', style: 'bg-blue-50 text-blue-700' },
+  done: { label: '完了', style: 'bg-green-50 text-green-700' },
+}
+
+const STATUS_ORDER: TaskStatus[] = ['todo', 'in_progress', 'done']
 
 function formatDate(dateStr: string | null) {
   if (!dateStr) return '—'
@@ -27,7 +35,20 @@ export function TaskListPage() {
   const [editingTask, setEditingTask] = useState<TaskResponse | null>(null)
   const { data: tasks = [], isLoading, isError } = useTasks(priority)
 
-  const sortedTasks = useMemo(() => sortTasks(tasks, sortKey), [tasks, sortKey])
+  const groupedTasks = useMemo(
+    () =>
+      STATUS_ORDER.reduce<Record<TaskStatus, TaskResponse[]>>(
+        (acc, status) => {
+          acc[status] = sortTasks(
+            tasks.filter((t) => t.status === status),
+            sortKey,
+          )
+          return acc
+        },
+        { todo: [], in_progress: [], done: [] },
+      ),
+    [tasks, sortKey],
+  )
 
   return (
     <main className="flex h-[calc(100vh-56px)] flex-col overflow-hidden">
@@ -79,39 +100,54 @@ export function TaskListPage() {
               <thead className="border-b border-gray-200 bg-gray-50">
                 <tr>
                   <th className="px-4 py-3 text-left font-medium text-gray-600">タイトル</th>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">ステータス</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-600">優先度</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-600">期日</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                {sortedTasks.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
-                      タスクがありません
-                    </td>
-                  </tr>
-                )}
-                {sortedTasks.map((task) => (
-                  <tr
-                    key={task.id}
-                    onClick={() => setEditingTask(task)}
-                    className="cursor-pointer transition-colors hover:bg-blue-50"
-                  >
-                    <td className="px-4 py-3 font-medium text-gray-800">{task.title}</td>
-                    <td className="px-4 py-3 text-gray-600">{STATUS_LABELS[task.status]}</td>
-                    <td className="px-4 py-3">
-                      {task.priority ? (
-                        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_BADGE[task.priority]}`}>
-                          {PRIORITY_LABELS[task.priority]}
-                        </span>
+              <tbody>
+                {STATUS_ORDER.map((status) => {
+                  const { label, style } = STATUS_HEADER[status]
+                  const statusTasks = groupedTasks[status]
+                  return (
+                    <>
+                      <tr key={`header-${status}`}>
+                        <td colSpan={3} className={`px-4 py-2 text-xs font-semibold uppercase tracking-wide ${style}`}>
+                          {label}
+                          <span className="ml-2 rounded-full bg-white/60 px-1.5 py-0.5 text-xs font-medium">
+                            {statusTasks.length}
+                          </span>
+                        </td>
+                      </tr>
+                      {statusTasks.length === 0 ? (
+                        <tr key={`empty-${status}`} className="border-t border-gray-100">
+                          <td colSpan={3} className="px-4 py-3 text-sm text-gray-400">
+                            タスクなし
+                          </td>
+                        </tr>
                       ) : (
-                        <span className="text-gray-400">—</span>
+                        statusTasks.map((task) => (
+                          <tr
+                            key={task.id}
+                            onClick={() => setEditingTask(task)}
+                            className="cursor-pointer border-t border-gray-100 transition-colors hover:bg-blue-50"
+                          >
+                            <td className="px-4 py-3 font-medium text-gray-800">{task.title}</td>
+                            <td className="px-4 py-3">
+                              {task.priority ? (
+                                <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_BADGE[task.priority]}`}>
+                                  {PRIORITY_LABELS[task.priority]}
+                                </span>
+                              ) : (
+                                <span className="text-gray-400">—</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-gray-600">{formatDate(task.dueDate)}</td>
+                          </tr>
+                        ))
                       )}
-                    </td>
-                    <td className="px-4 py-3 text-gray-600">{formatDate(task.dueDate)}</td>
-                  </tr>
-                ))}
+                    </>
+                  )
+                })}
               </tbody>
             </table>
           </div>
