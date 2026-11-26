@@ -23,7 +23,7 @@ public class Task {
         this.id = UUID.randomUUID();
         this.title = request.title();
         this.description = request.description();
-        this.status = "TODO";
+        this.status = "todo";
         this.priority = request.priority();
         this.dueDate = request.dueDate();
         this.createdBy = createdBy;
