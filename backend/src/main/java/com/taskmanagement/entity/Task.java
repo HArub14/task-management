@@ -1,5 +1,6 @@
 package com.taskmanagement.entity;
 
+import com.taskmanagement.dto.TaskRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,18 @@ public class Task {
     @Id
     @Column(columnDefinition = "uuid")
     private UUID id;
+
+    public Task(TaskRequest request, User createdBy) {
+        this.id = UUID.randomUUID();
+        this.title = request.title();
+        this.description = request.description();
+        this.status = "todo";
+        this.priority = request.priority();
+        this.dueDate = request.dueDate();
+        this.createdBy = createdBy;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
     @Column(nullable = false)
     private String title;

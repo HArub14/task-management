@@ -16,9 +16,6 @@ export function TaskCard({ task }: TaskCardProps) {
       <p className="mb-2 line-clamp-2 text-sm font-semibold text-gray-800">{task.title}</p>
       <div className="flex flex-wrap items-center gap-1.5">
         {task.priority && <Badge variant={task.priority} />}
-        {task.assigneeName && (
-          <span className="truncate text-xs text-gray-500">{task.assigneeName}</span>
-        )}
       </div>
       {task.dueDate && (
         <p className="mt-2 text-xs text-gray-400">{formatDate(task.dueDate)}</p>

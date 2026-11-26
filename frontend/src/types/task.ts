@@ -1,6 +1,13 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'done'
 export type TaskPriority = 'high' | 'medium' | 'low'
 
+export interface CreateTaskRequest {
+  title: string
+  description?: string
+  priority?: TaskPriority
+  dueDate?: string
+}
+
 export interface TaskResponse {
   id: string
   title: string
